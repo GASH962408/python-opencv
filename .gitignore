@@ -1,0 +1,14 @@
+# Ignorar entornos virtuales de Python
+venv/
+__pycache__/
+*.pyc
+
+# Ignorar dependencias de Node.js (si aplica)
+node_modules/
+build/
+
+# Archivos de entorno y configuración local
+.env
+
+# Archivos del sistema
+.DS_Store
