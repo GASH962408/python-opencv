@@ -2,12 +2,14 @@ import React from 'react';
 
 function App() {
   return (
-    <div className="App">
+    <main className="App">
       <header className="App-header">
         <h1>Sistema de Vigilancia Inteligente</h1>
-        <p>Transmisión de Video en Tiempo Real con Detección de Objetos</p>
       </header>
-    </div>
+      <section>
+        <p>Transmisión de Video en Tiempo Real con Detección de Objetos</p>
+      </section>
+    </main>
   );
 }
 
