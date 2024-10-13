@@ -1,31 +1,26 @@
+/* General Styling */
+body {
+  background-color: #61dafb;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
 .App {
   text-align: center;
 }
 
+/* Logo Styling */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+  transition: transform 0.3s ease-in-out; /* Añadimos una transición */
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
 }
 
 @keyframes App-logo-spin {
@@ -37,6 +32,25 @@
   }
 }
 
-.body{
-  background-color: #61dafb;
+/* Header Styling */
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem; /* Usamos una medida fija más sencilla */
+  color: white;
+}
+
+/* Link Styling */
+.App-link {
+  color: #61dafb;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out; /* Añadimos transición suave */
+}
+
+.App-link:hover {
+  color: #ffffff; /* Cambio de color al interactuar */
 }
