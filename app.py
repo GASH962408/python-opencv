@@ -1,71 +1,72 @@
-from flask import Flask, Response
+from flask import Flask, Response, send_from_directory
 import cv2
 import torch
 import numpy as np
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='build', static_url_path='/')
 
-# Ruta al archivo de video
+class VideoCamera:
+    def __init__(self, video_file):
+        self.video_file = video_file
+        self.camera = cv2.VideoCapture(video_file)
+
+    def get_frame(self):
+        success, frame = self.camera.read()
+        if not success:
+            self.camera.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Loop video
+            success, frame = self.camera.read()
+        return frame
+
+    def release(self):
+        self.camera.release()
+
+# Instantiate the video camera
 video_file = 'video1.mp4'
-camera = cv2.VideoCapture(video_file)
+camera = VideoCamera(video_file)
 
-# Verificar si el archivo de video se abrió correctamente
-if not camera.isOpened():
-    print(f"No se pudo abrir el archivo de video: {video_file}")
-    exit()
-
-# Cargar el modelo YOLOv5 preentrenado desde PyTorch Hub
+# Load the YOLOv5 model once
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 
-# Función para procesar y detectar objetos en el frame
 def detect_objects(frame):
-    """Detectar objetos en un frame usando YOLOv5"""
-    # Convertir el frame de OpenCV (BGR) a formato RGB
-    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    results = model(frame_rgb)  # Realizar la detección con YOLOv5
+    """Detect objects in a frame using YOLOv5"""
+    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
+    results = model(frame_rgb)  # Perform detection
 
-    # Dibujar las cajas y etiquetas en el frame
-    for detection in results.xyxy[0]:  # Obtener las detecciones
+    for detection in results.xyxy[0]:
         xmin, ymin, xmax, ymax, confidence, class_id = detection
         label = f'{model.names[int(class_id)]} {confidence:.2f}'
-        # Dibujar rectángulo alrededor del objeto detectado
         cv2.rectangle(frame, (int(xmin), int(ymin)), (int(xmax), int(ymax)), (0, 255, 0), 2)
-        # Añadir la etiqueta del objeto detectado
         cv2.putText(frame, label, (int(xmin), int(ymin) - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
     return frame
 
 def generate_frames():
+    """Generate frames from the video with object detection"""
     while True:
-        success, frame = camera.read()
-
-        if not success:
-            # Reiniciar el video al llegar al final
-            camera.set(cv2.CAP_PROP_POS_FRAMES, 0)
-            continue  # Seguir el bucle para leer desde el inicio
-
-        # Detectar objetos en el frame usando YOLOv5
+        frame = camera.get_frame()
         frame = detect_objects(frame)
-
-        # Codificar el frame en formato JPEG
         ret, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
-
-        # Enviar el frame con el formato adecuado para el navegador
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
-@app.route('/')
-def index():
-    return "¡Bienvenido al Sistema de Vigilancia Inteligente con Video de Archivo!"
-
 @app.route('/video_feed')
 def video_feed():
-    global camera
-    # Cerrar y reabrir el archivo de video al recargar la página
-    camera.release()
-    camera = cv2.VideoCapture(video_file)
+    """Route to stream video"""
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_react_app(path):
+    """Serve the React application"""
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    try:
+        app.run(debug=True, port=5000)
+    except Exception as e:
+        print(f"Error occurred: {e}")
