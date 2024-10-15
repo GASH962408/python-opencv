@@ -6,7 +6,7 @@ function App() {
   return (
     <div>
       <h1 className='titulo'>Bienvenido a mi aplicación de países</h1>
-      <Countries /> {/* Renderiza el componente Countries */}
+      <Countries/>
     </div>
   );
 }

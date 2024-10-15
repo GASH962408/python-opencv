@@ -1,19 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-const Countries = () => {
+const Countries = ({initial=0}) => {
+  const [contador, setContador] = useState(initial);
 
-const [frase, setFrase] = useState("");
+  const incrementar = () => {setContador(contador+1);}
+  const decrementar = () => {if (contador>0) {setContador(contador-1);}}
+  const reset = () => {setContador(0)}
 
-return(
-  <div>
-    <h2>Ingresa frase:</h2>
-    <input type="text"
-     value={frase}
-     onChange={(e)=> setFrase(e.target.value)}
-     placeholder='Ingresa tu texto aqui'
-     />
-  </div>
-)
-
+  return(<div>
+      <p>El contador esta en : {contador}</p>
+      <button onClick={incrementar}>+</button>
+      <button onClick={decrementar}>-</button>
+      <button onClick={reset}>reset</button>
+      </div>)
 }
-export default Countries
+Countries.propTypes={
+  initial:PropTypes.number,
+};
+
+Countries.defaultProps={
+  initial:0,
+}
+
+
+
+export default Countries;
