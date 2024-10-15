@@ -1,0 +1,35 @@
+/* Estilos básicos para el contenedor del contador */
+.contador-container {
+  text-align: center; /* Centra todo el contenido */
+  margin-top: 20px; /* Añade un margen superior */
+  padding: 10px;
+  background-color: #f9f9f9; /* Color de fondo */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  width: 200px;
+  margin: 0 auto; /* Centra horizontalmente */
+ margin-top: 40px;
+}
+
+/* Estilo del texto del contador */
+.contador-texto {
+  font-size: 24px; /* Tamaño del texto */
+  font-weight: bold; /* Texto en negrita */
+  color: #333; /* Color del texto */
+}
+
+/* Estilo del botón */
+.contador-boton {
+  background-color: #4CAF50; /* Fondo verde */
+  color: white; /* Texto en blanco */
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer; /* Cambia el cursor a mano cuando pasas por encima */
+  border-radius: 5px; /* Bordes redondeados */
+  margin-right: 6px;
+}
+
+.contador-boton:hover {
+  background-color: #2836b5; /* Color más oscuro al pasar el ratón */
+}

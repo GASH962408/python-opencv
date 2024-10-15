@@ -1,0 +1,7 @@
+.titulo{
+  font-size: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color:black;
+}
